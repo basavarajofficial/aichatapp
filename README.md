@@ -100,8 +100,10 @@ pnpm dev  # or npm run dev / yarn dev
 
 | Method | Endpoint             | Description                          |
 | ------ | -------------------- | ------------------------------------ |
-| POST   | `/api/auth/login`  | Authenticates the user & sets cookie |
-| POST   | `/api/auth/logout` | Clears the authentication cookie     |
+| POST   | `/api/auth/login`  | API End point to Authenticates the user & sets cookie |
+| POST   | `/`  | Open Login page to Authenticates the user & sets cookie |
+| POST   | `/chat` | redirect to chat interface     |
+| POST   | `/verifyotp` | redirect to verify OTP page     |
 
 ## 🔐 Middleware Protection
 
