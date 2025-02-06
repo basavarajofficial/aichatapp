@@ -1,6 +1,12 @@
 
 # SourceByte.AI using Next.js
 
+```
+Demo user credentials:
+email: user@example.com
+password: abc123
+```
+
 ## 📌 Overview
 
 This project implements authentication in a **Next.js (App Router)** application using:
