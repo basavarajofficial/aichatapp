@@ -1,5 +1,5 @@
 
-# Next.js Authentication with JWT & Cookies
+# SourceByte.AI using Next.js
 
 ## 📌 Overview
 
