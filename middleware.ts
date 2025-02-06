@@ -10,9 +10,11 @@ export async function middleware(request: NextRequest) {
   if (path.startsWith("/chat")) {
     try {
       // Get token from cookies
-      const token = cookies().get("token")?.value;
-      if (!token) throw new Error("No token provided");
+      const cookieStore = await cookies();
+      const tokenCookie = cookieStore.get("token");
+      const token = tokenCookie?.value;
 
+      if (!token) throw new Error("No token provided");
       // Verify token
       await verifyToken(token);
       return NextResponse.next();

@@ -134,7 +134,14 @@ const ChatInterface = () => {
 };
 
 // Helper Component for Nav Items
-const NavItem = ({ icon, label, isOpen, isActive = false }) => (
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  isOpen: boolean;
+  isActive?: boolean;
+}
+
+const NavItem = ({ icon, label, isOpen, isActive = false }: NavItemProps) => (
   <button
     className={`w-full flex items-center gap-2 p-2 rounded-lg mb-1 ${
       isActive ? 'bg-gray-700' : 'hover:bg-gray-700'
