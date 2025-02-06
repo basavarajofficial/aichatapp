@@ -38,6 +38,8 @@ export async function POST(req: Request) {
     });
 
     const { password: userPassword, ...userdata} = user;
+    console.log(userPassword);
+
     // Optionally, set the token in localStorage as well
     req.headers.set('Set-Cookie', `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`);
     return NextResponse.json({ message: "Login successful!!!", userdata }, { status: 200 });

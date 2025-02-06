@@ -15,7 +15,6 @@ import Suggetions from "./Suggetions";
 import HistoryData from "./rightSidebar/History";
 import Profile from "./Profile";
 import { chats } from "@/lib/chatHistory";
-import Card from "./SubscriptionCard";
 
 const ChatInterface = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
