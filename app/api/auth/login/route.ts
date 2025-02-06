@@ -37,7 +37,10 @@ export async function POST(req: Request) {
       path: "/",
     });
 
-    return NextResponse.json({ message: "Login successful!!!" }, { status: 200 });
+    const { password: userPassword, ...userdata} = user;
+    // Optionally, set the token in localStorage as well
+    req.headers.set('Set-Cookie', `token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict`);
+    return NextResponse.json({ message: "Login successful!!!", userdata }, { status: 200 });
 
   } catch (error) {
     return NextResponse.json({ message: "Internal Server Error", error }, { status: 500 });

@@ -5,18 +5,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
+    const { toast } = useToast();
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        setLoading(true);
         try {
           const res = await fetch("/api/auth/login", {
             method: "POST",
@@ -26,13 +29,23 @@ export default function LoginPage() {
 
           if (!res.ok) {
             const errorData = await res.json();
-            alert(errorData.message || "Login failed!");
+            toast({
+                title: "Invalid credentials",
+                description : `data: ${errorData.message}`,
+                variant: "destructive"
+              })
+              setLoading(false)
             return;
           }
 
-          // Debugging: Log the response
           const data = await res.json();
-          console.log("Login response:", data);
+          console.log(data?.userdata);
+          setLoading(false);
+
+          toast({
+            title: "logged in success!",
+            variant: "default"
+          })
 
           // Redirect to /dashboard
           router.push("/chat");
@@ -40,8 +53,12 @@ export default function LoginPage() {
           // Refresh the page to ensure middleware runs
           router.refresh();
         } catch (error) {
-          console.error("Login error:", error);
-          alert("An error occurred during login.");
+          setLoading(false);
+          toast({
+            title: "Failed to login",
+            description: `Error while login: ${error}`,
+            variant: "destructive"
+          })
         }
       };
 
@@ -112,7 +129,8 @@ export default function LoginPage() {
               type="submit"
               className="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition-colors duration-200 text-sm lg:text-base"
             >
-              Continue
+                { loading ? "...loading" : "Continue" }
+
             </button>
           </form>
 

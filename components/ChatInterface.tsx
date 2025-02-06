@@ -1,11 +1,25 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { MessageSquare, FileText, Settings, LogOut, Send, Bell, History, Menu } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  MessageSquare,
+  FileText,
+  Settings,
+  Send,
+  Bell,
+  Menu,
+  Mic,
+
+} from "lucide-react";
+import Suggetions from "./Suggetions";
+import HistoryData from "./rightSidebar/History";
+import Profile from "./Profile";
+import { chats } from "@/lib/chatHistory";
+import Card from "./SubscriptionCard";
 
 const ChatInterface = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
   // Handle responsive sidebar behavior
@@ -18,11 +32,13 @@ const ChatInterface = () => {
     // Initial check
     handleResize();
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+
+
 
   return (
     <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
@@ -35,43 +51,69 @@ const ChatInterface = () => {
       )}
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed md:relative
-        ${isMobile ? 'inset-y-0 left-0 z-30' : ''}
-        ${isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0 md:w-16'}
+        ${isMobile ? "inset-y-0 left-0 z-30" : ""}
+        ${
+          isSidebarOpen
+            ? "translate-x-0 w-64"
+            : "-translate-x-full md:translate-x-0 md:w-16"
+        }
         bg-gray-800 transition-all duration-300 flex flex-col
-      `}>
+      `}
+      >
         {/* Logo Section */}
         <div className="p-4 flex items-center gap-2">
           <div className="bg-orange-500 rounded p-1 shrink-0">
             <MessageSquare size={20} />
           </div>
-          {isSidebarOpen && <span className="font-semibold truncate">SourceBytes.AI</span>}
+          {isSidebarOpen && (
+            <span className="font-semibold truncate">SourceBytes.AI</span>
+          )}
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-2 py-4 overflow-y-auto">
-          <NavItem icon={<MessageSquare />} label="Dashboard" isOpen={isSidebarOpen} isActive />
-          <NavItem icon={<FileText />} label="Documents" isOpen={isSidebarOpen} />
-          <NavItem icon={<Settings />} label="Settings" isOpen={isSidebarOpen} />
+          <NavItem
+            icon={<MessageSquare />}
+            label="Dashboard"
+            isOpen={isSidebarOpen}
+            isActive
+          />
+          <NavItem
+            icon={<FileText />}
+            label="Documents"
+            isOpen={isSidebarOpen}
+          />
+          <NavItem
+            icon={<Settings />}
+            label="Settings"
+            isOpen={isSidebarOpen}
+          />
         </nav>
 
         {/* Bottom Section */}
         <div className="p-4 shrink-0">
+
           {isSidebarOpen ? (
-            <div className="bg-orange-500 rounded-lg p-4">
+            <div className="bg-orange-500 rounded-lg p-4 hover:cursor-pointer">
               <h3 className="font-semibold mb-2 truncate">SourceBytes.AI</h3>
-              <p className="text-sm">Transforming Enterprises with Generative AI</p>
+              <p className="text-sm">
+                Transforming Enterprises with Generative AI
+              </p>
             </div>
           ) : (
             <div className="bg-orange-500 rounded-lg p-2 flex justify-center">
               <MessageSquare size={20} />
             </div>
           )}
-          <button className="mt-4 flex items-center gap-2 text-gray-400 hover:text-white w-full justify-center">
+          {/* <button onClick={logoutHandler}
+           className="mt-4 flex items-center gap-2 text-gray-400 hover:text-white w-full justify-center">
             <LogOut size={20} className="shrink-0" />
             {isSidebarOpen && <span className="truncate">Logout</span>}
-          </button>
+          </button> */}
+          <Profile sidebarOpen={isSidebarOpen} />
         </div>
       </div>
 
@@ -86,20 +128,21 @@ const ChatInterface = () => {
             >
               <Menu size={20} />
             </button>
-            <h1 className="font-semibold truncate">
+            <h1 className="font-semibold truncate md:block hidden">
               Powering Enterprise Innovation with Gen-AI
             </h1>
+            <h1 className="font-semibold text-sm truncate md:hidden block">
+              Gen-AI
+            </h1>
           </div>
-          <div className="flex items-center gap-2 md:gap-4 shrink-0">
+
+          {/** header Icons  */  }
+          <div className="flex items-center gap-2 md:gap-4 ">
             <button className="p-2 hover:bg-gray-800 rounded-lg hidden sm:block">
               <Bell size={20} />
             </button>
-            <button className="p-2 hover:bg-gray-800 rounded-lg hidden sm:block">
-              <History size={20} />
-            </button>
-            <div className="bg-gray-800 px-3 py-1 rounded-lg text-sm">
-              0/50
-            </div>
+            <HistoryData />
+            <div className="bg-gray-800 px-3 py-1 rounded-lg text-sm">{chats.length}</div>
           </div>
         </header>
 
@@ -110,20 +153,25 @@ const ChatInterface = () => {
           </h2>
           <div className="w-full max-w-2xl">
             <div className="flex gap-2">
-              <button className="p-2 bg-gray-800 rounded-lg shrink-0">
-                <MessageSquare size={20} />
-              </button>
-              <div className="flex-1 flex gap-2 min-w-0">
-                <input
-                  type="text"
-                  placeholder="Write here....."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="flex-1 bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-0"
-                />
-                <button className="p-2 bg-orange-500 rounded-lg hover:bg-orange-600 shrink-0">
-                  <Send size={20} />
-                </button>
+              <div>
+                <div className="flex-1 flex gap-2 min-w-0">
+                  <button className="p-2 bg-gray-800 rounded-lg shrink-0">
+                    <Mic size={20} />
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Write here....."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="flex-1 bg-gray-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-0"
+                  />
+                  <button className="p-2 bg-orange-500 rounded-lg hover:bg-orange-600 shrink-0">
+                    <Send size={20} />
+                  </button>
+                </div>
+                <div className="w-full m-8">
+                  <Suggetions />
+                </div>
               </div>
             </div>
           </div>
@@ -144,7 +192,7 @@ interface NavItemProps {
 const NavItem = ({ icon, label, isOpen, isActive = false }: NavItemProps) => (
   <button
     className={`w-full flex items-center gap-2 p-2 rounded-lg mb-1 ${
-      isActive ? 'bg-gray-700' : 'hover:bg-gray-700'
+      isActive ? "bg-gray-700" : "hover:bg-gray-700"
     }`}
   >
     {icon}
