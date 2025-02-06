@@ -1,24 +1,29 @@
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from "jose";
 
-const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
+const SECRET_KEY = process.env.JWT_SECRET as string;
 
-// Generate JWT
-interface Payload {
-    [key: string]: string | number | boolean;
+if (!SECRET_KEY) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
 }
 
-export function generateToken(payload: Payload): string {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+const secret = new TextEncoder().encode(SECRET_KEY!);
+
+// Generate JWT Token
+export function generateToken(payload: { id: number; email: string}){
+  return new SignJWT(payload)
+  .setProtectedHeader({ alg: "HS256" })
+  .setIssuedAt()
+  .setExpirationTime("1h")
+  .sign(secret);
 }
 
-// Verify JWT
-
-export function verifyToken(token: string): boolean {
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-      return !!decoded;
-    } catch (error) {
-        console.error("JWT Verification Error:", error);
-      return false;
-    }
+// Verify JWT Token
+export async function verifyToken(token: string){
+  try {
+    const { payload } = await jwtVerify(token, secret);
+    return payload;
+  } catch (error) {
+    console.error("JWT Verification Error:", error);
+    return null;
   }
+}

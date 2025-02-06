@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import heroImage from "@/assets/hero.jpg";
+// import heroImage from "@/assets/hero.jpg";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -51,12 +51,11 @@ export default function LoginPage() {
       {/* Hero Section */}
       <div className="lg:w-2/3 relative min-h-[60vh] lg:min-h-screen">
         <Image
-          src={heroImage}
+          src="/assets/hero.jpg"
           alt="SourceBytes.AI Background"
-          layout="fill"
-          objectFit="cover"
-          priority
-          className="z-0"
+            layout="fill" // Makes the image fill the parent container
+            objectFit="cover" // Ensures the image covers the container without distortion
+            priority // Prioritizes loading this image
         />
 
         {/* Overlay Content */}
